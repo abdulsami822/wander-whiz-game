@@ -18,20 +18,25 @@ const AnswerOptions: React.FC = () => {
         const isWrongSelected = hasGuessed && option !== correctAnswer && isCorrect === false;
         
         return (
-          <Button
+          <button
             key={index}
-            variant={isSelected && isCorrect ? "default" : isSelected ? "destructive" : "outline"}
-            className={`text-left justify-start py-6 transition-all duration-300 hover-lift
-              ${hasGuessed ? 'pointer-events-none' : ''}
-              ${isSelected && isCorrect ? 'ring-2 ring-green-500 bg-green-100 text-green-800' : ''}
-              ${isSelected && !isCorrect ? 'ring-2 ring-red-500 bg-red-100 text-red-800' : ''}
+            className={`option-btn text-left justify-start py-6 transition-all duration-300
+              ${hasGuessed ? 'pointer-events-none' : 'hover:animate-wiggle'}
+              ${isSelected && isCorrect ? 'bg-gradient-confetti border-2 border-game-lime-green animate-pop' : ''}
+              ${isSelected && !isCorrect ? 'bg-gradient-to-r from-red-400 to-red-500 border-2 border-red-600' : ''}
               ${isWrongSelected ? 'opacity-50' : ''}
             `}
             onClick={() => !hasGuessed && makeGuess(option)}
             disabled={hasGuessed}
           >
-            {option}
-          </Button>
+            <span className="relative z-10">{option}</span>
+            {index % 2 === 0 && (
+              <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-game-tropical-yellow animate-pulse-light"></div>
+            )}
+            {index % 2 === 1 && (
+              <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-game-vibrant-pink animate-pulse-light"></div>
+            )}
+          </button>
         );
       })}
     </div>

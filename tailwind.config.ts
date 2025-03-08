@@ -62,6 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				game: {
+					'neon-blue': '#4DEEEA',
+					'electric-purple': '#A239EA',
+					'vibrant-pink': '#FF70A6',
+					'tropical-yellow': '#FFE66D',
+					'lime-green': '#A8F65F',
+					'bright-orange': '#FF9E43',
+					'aqua': '#00FFFF',
 				}
 			},
 			borderRadius: {
@@ -125,6 +134,32 @@ export default {
 				'confetti': {
 					'0%': { transform: 'translateY(0) rotate(0deg)', opacity: '1' },
 					'100%': { transform: 'translateY(100vh) rotate(720deg)', opacity: '0' }
+				},
+				'bounce': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-15px)' }
+				},
+				'wiggle': {
+					'0%, 100%': { transform: 'rotate(-3deg)' },
+					'50%': { transform: 'rotate(3deg)' }
+				},
+				'plane-fly': {
+					'0%': { transform: 'translateX(-100%) translateY(0)' },
+					'50%': { transform: 'translateX(0%) translateY(-50px)' },
+					'100%': { transform: 'translateX(100%) translateY(0)' }
+				},
+				'balloon-float': {
+					'0%': { transform: 'translateY(100%)' },
+					'100%': { transform: 'translateY(-100vh)' }
+				},
+				'pop': {
+					'0%': { transform: 'scale(0.8)', opacity: '0' },
+					'50%': { transform: 'scale(1.2)', opacity: '1' },
+					'100%': { transform: 'scale(1)', opacity: '1' }
+				},
+				'glow': {
+					'0%, 100%': { filter: 'brightness(1)' },
+					'50%': { filter: 'brightness(1.3)' }
 				}
 			},
 			animation: {
@@ -142,7 +177,23 @@ export default {
 				'typewriter': 'typewriter 2s steps(40, end)',
 				'blink': 'blink 0.75s step-end infinite',
 				'confetti': 'confetti 2s ease-out forwards',
-			}
+				'bounce': 'bounce 2s ease-in-out infinite',
+				'wiggle': 'wiggle 1s ease-in-out infinite',
+				'plane-fly': 'plane-fly 10s ease-in-out infinite',
+				'balloon-float': 'balloon-float 15s linear infinite',
+				'pop': 'pop 0.3s ease-out',
+				'glow': 'glow 2s ease-in-out infinite',
+			},
+			boxShadow: {
+				'arcade': '0 0 15px 2px rgba(77, 238, 234, 0.5)',
+				'neon': '0 0 10px theme("colors.game.neon-blue"), 0 0 20px theme("colors.game.electric-purple")',
+				'glossy': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
+			},
+			backgroundImage: {
+				'gradient-arcade': 'linear-gradient(135deg, #4DEEEA 0%, #A239EA 50%, #FF70A6 100%)',
+				'gradient-game': 'linear-gradient(90deg, #FFE66D 0%, #FF9E43 100%)',
+				'gradient-confetti': 'linear-gradient(90deg, #A8F65F 0%, #4DEEEA 50%, #FF70A6 100%)',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
