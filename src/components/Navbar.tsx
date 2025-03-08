@@ -8,6 +8,11 @@ const Navbar = () => {
   const { resetGame } = useGameContext();
   const isGamePage = location.pathname === "/game";
 
+  // Create a handler function that calls resetGame without passing the event
+  const handleResetGame = () => {
+    resetGame();
+  };
+
   const navigationLinks = [
     {
       to: "/game",
@@ -30,7 +35,7 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="border-b border-purple-500/20 bg-game-background/80 backdrop-blur-sm sticky top-0 z-10 shadow-lg">
+    <header className="border-b border-purple-500/20 bg-game-background/80 backdrop-blur-sm sticky top-0 z-50 shadow-lg">
       <div className="container max-w-6xl mx-auto p-4 flex justify-between items-center">
         <Link
           to="/"
@@ -44,7 +49,7 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={resetGame}
+                onClick={handleResetGame}
                 className="flex items-center gap-1 text-purple-400 hover:text-purple-300 hover:bg-purple-500/10"
               >
                 <RefreshCw className="w-4 h-4" />

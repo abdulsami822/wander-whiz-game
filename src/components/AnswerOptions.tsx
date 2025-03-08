@@ -9,16 +9,28 @@ const AnswerOptions: React.FC = () => {
 
   if (!currentDestination) return null;
 
-  const correctAnswer = `${currentDestination.city}, ${currentDestination.country}`;
+  const correctAnswer = {
+    city: currentDestination.city,
+    country: currentDestination.country,
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {options.map((option, index) => {
-        const isSelected = hasGuessed && option === correctAnswer;
+        const isSelected =
+          hasGuessed &&
+          option.city === correctAnswer.city &&
+          option.country === correctAnswer.country;
         const isIncorrectSelected =
-          hasGuessed && !isCorrect && option !== correctAnswer;
+          hasGuessed &&
+          !isCorrect &&
+          (option.city !== correctAnswer.city ||
+            option.country !== correctAnswer.country);
         const isCorrectUnselected =
-          hasGuessed && option === correctAnswer && !isCorrect;
+          hasGuessed &&
+          option.city === correctAnswer.city &&
+          option.country === correctAnswer.country &&
+          !isCorrect;
 
         return (
           <Button
@@ -76,8 +88,9 @@ const AnswerOptions: React.FC = () => {
                 ${
                   isSelected && !isCorrect ? "border-red-500 bg-red-500/20" : ""
                 }
-                ${isCorrectUnselected ? "border-green-500 bg-green-500/10" : ""}
-                transition-all duration-300
+                ${
+                  isCorrectUnselected ? "border-green-500 bg-green-500/10" : ""
+                } transition-all duration-300}
               `}
               >
                 {isSelected && isCorrect && (
@@ -95,7 +108,9 @@ const AnswerOptions: React.FC = () => {
               </div>
             </div>
 
-            <span className="font-medium">{option}</span>
+            <span className="font-medium">
+              {option.city}, {option.country}
+            </span>
 
             {/* Hover effect */}
             {!hasGuessed && (

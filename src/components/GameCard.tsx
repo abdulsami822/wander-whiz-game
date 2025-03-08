@@ -29,7 +29,7 @@ const GameCard: React.FC<GameCardProps> = ({
       {title && (
         <CardHeader className="pb-2 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 blur-xl"></div>
-          <CardTitle className="text-center relative z-10 font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+          <CardTitle className="pb-4 text-center relative z-10 font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
             {title}
           </CardTitle>
         </CardHeader>

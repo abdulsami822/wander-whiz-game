@@ -5,18 +5,15 @@ import { Trophy, MapPin, Star, Plane } from "lucide-react";
 
 const ScoreDisplay: React.FC = () => {
   const { state } = useGameContext();
-  const { score, remainingDestinations, visitedDestinations = [] } = state;
+  const { score, round } = state;
 
-  const totalDestinations =
-    remainingDestinations.length + visitedDestinations.length;
-
-  // Calculate progress based on visited destinations
-  // If no destinations visited yet, show minimal progress (5%)
-  const visitedCount = visitedDestinations.length;
-  const progressPercentage =
-    totalDestinations > 0 ? (visitedCount / totalDestinations) * 100 : 0;
-
+  // Calculate progress based on current round
+  const totalRounds = 10; // Match the maxRounds in GameContext
+  const progressPercentage = (round / totalRounds) * 100;
   const progress = Math.max(5, Math.min(100, progressPercentage));
+
+  // Calculate remaining destinations
+  const remainingCount = totalRounds - round;
 
   return (
     <div className="space-y-4 px-8 py-6 pb-12">
@@ -37,7 +34,7 @@ const ScoreDisplay: React.FC = () => {
         </div>
         <div className="flex items-center gap-2.5">
           <span className="font-medium text-gray-400">
-            {remainingDestinations.length} to go
+            {remainingCount} to go
           </span>
           <div className="bg-purple-500/20 p-1.5 rounded-full shadow-sm shadow-purple-500/10">
             <MapPin className="w-4 h-4 text-purple-400" />
