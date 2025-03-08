@@ -2,7 +2,7 @@
 import React from 'react';
 import { useGameContext } from '@/contexts/GameContext';
 import { Progress } from '@/components/ui/progress';
-import { Compass, MapPin, PlaneTakeoff } from 'lucide-react';
+import { Compass, MapPin } from 'lucide-react';
 
 const ScoreDisplay: React.FC = () => {
   const { state } = useGameContext();
@@ -33,8 +33,8 @@ const ScoreDisplay: React.FC = () => {
           className="absolute top-0 bottom-0 left-0 flex items-center transition-all duration-500"
           style={{ left: `${progress}%`, transform: 'translateX(-50%)' }}
         >
-          <div className="w-6 h-6 flex items-center justify-center shadow-md animate-float">
-            <PlaneTakeoff className="w-3 h-3 text-white" />
+          <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-md animate-float">
+            <div className="w-3 h-3 bg-white rounded-full"></div>
           </div>
         </div>
       </div>
