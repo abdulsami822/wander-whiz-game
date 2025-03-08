@@ -33,7 +33,7 @@ const ScoreDisplay: React.FC = () => {
           className="absolute top-0 bottom-0 left-0 flex items-center transition-all duration-500"
           style={{ left: `${progress}%`, transform: 'translateX(-50%)' }}
         >
-          <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-md animate-float">
+          <div className="w-6 h-6 flex items-center justify-center shadow-md animate-float">
             <PlaneTakeoff className="w-3 h-3 text-white" />
           </div>
         </div>
