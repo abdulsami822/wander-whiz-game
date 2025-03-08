@@ -11,17 +11,17 @@ interface GameCardProps {
 
 const GameCard: React.FC<GameCardProps> = ({ children, title, footer, className = '' }) => {
   return (
-    <Card className={`game-card ${className}`}>
+    <Card className={`glass-card overflow-hidden ${className}`}>
       {title && (
         <CardHeader className="pb-2">
-          <CardTitle className="text-center text-2xl text-game-electric-purple">{title}</CardTitle>
+          <CardTitle className="text-center">{title}</CardTitle>
         </CardHeader>
       )}
       <CardContent className="p-6">
         {children}
       </CardContent>
       {footer && (
-        <CardFooter className="bg-secondary/20 rounded-b-xl px-6 py-4 border-t-2 border-game-vibrant-pink/30">
+        <CardFooter className="bg-secondary bg-opacity-40 px-6 py-4">
           {footer}
         </CardFooter>
       )}
