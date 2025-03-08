@@ -1,141 +1,190 @@
-
-import React, { useEffect, useState } from 'react';
-import { useGameContext } from '@/contexts/GameContext';
-import { Button } from '@/components/ui/button';
-import { Check, X, Globe, ArrowRight } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { useGameContext } from "@/contexts/GameContext";
+import { Button } from "@/components/ui/button";
+import { Check, X, Globe, ArrowRight } from "lucide-react";
+import confetti from "canvas-confetti";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ResultDisplay: React.FC = () => {
   const { state, nextDestination } = useGameContext();
   const { currentDestination, hasGuessed, isCorrect } = state;
-  const [showAnimation, setShowAnimation] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
-  
+
   useEffect(() => {
     if (hasGuessed) {
-      setShowAnimation(true);
-      // Trigger fade-in animation after the success/failure animation
-      setTimeout(() => {
-        setFadeIn(true);
-      }, 800);
-      
-      const timer = setTimeout(() => {
-        setShowAnimation(false);
-      }, 2000);
-      return () => clearTimeout(timer);
+      // Immediately start fade-in for better responsiveness
+      setFadeIn(true);
+
+      // Only show confetti for correct answers
+      if (isCorrect) {
+        // More subtle confetti configuration
+        const subtleConfettiConfig = {
+          particleCount: 30, // Even fewer particles
+          spread: 50, // Less spread
+          disableForReducedMotion: true,
+          gravity: 1.5, // Faster fall
+          scalar: 0.7, // Smaller particles
+          ticks: 100, // Shorter animation duration
+          colors: ["#9c5de4", "#f15bb5", "#fee440"],
+          zIndex: 9999,
+          decay: 0.94, // Faster decay
+          startVelocity: 20, // Lower initial velocity
+        };
+
+        // Fire confetti from center-top for a more subtle effect
+        confetti({
+          ...subtleConfettiConfig,
+          origin: { x: 0.5, y: 0.3 },
+        });
+      }
     }
-  }, [hasGuessed]);
-  
+
+    return () => {
+      confetti.reset();
+    };
+  }, [hasGuessed, isCorrect]);
+
   if (!currentDestination || !hasGuessed) return null;
-  
-  const fact = isCorrect 
-    ? currentDestination.funFacts[0] 
+
+  const fact = isCorrect
+    ? currentDestination.funFacts[0]
     : currentDestination.trivia[0];
-  
+
   return (
-    <div className="space-y-6">
-      {/* Success or failure animation */}
-      <div className="flex justify-center mb-6">
-        {isCorrect ? (
-          <div className="relative">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full 
-              flex items-center justify-center shadow-lg shadow-green-400/30 animate-scale-in">
-              <Check className="w-10 h-10 text-white" />
+    <div className="p-4 max-h-[70vh] overflow-y-auto">
+      <AnimatePresence>
+        {/* Success or failure animation - enhanced */}
+        <motion.div
+          className="flex justify-center mb-3"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 15,
+          }}
+        >
+          {isCorrect ? (
+            <div
+              className="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-full 
+              flex items-center justify-center shadow-md shadow-green-400/20 relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-white opacity-0 animate-pulse-subtle"></div>
+              <Check className="w-7 h-7 text-white" />
             </div>
-            
-            {/* Confetti effect */}
-            {showAnimation && (
+          ) : (
+            <div
+              className="w-14 h-14 bg-gradient-to-br from-red-400 to-red-600 rounded-full 
+              flex items-center justify-center shadow-md shadow-red-400/20"
+            >
+              <X className="w-7 h-7 text-white" />
+            </div>
+          )}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.4,
+            delay: 0.2,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className={`bg-purple-500/5 backdrop-blur-sm rounded-xl p-4 border border-purple-500/20 shadow-md
+          transition-all duration-300 ${fadeIn ? "opacity-100" : "opacity-0"}`}
+        >
+          <motion.h3
+            className="text-lg font-bold mb-2 flex items-center gap-2"
+            initial={{ opacity: 0, x: -5 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: 0.3 }}
+          >
+            {isCorrect ? (
               <>
-                {[...Array(30)].map((_, i) => (
-                  <div 
-                    key={i}
-                    className="confetti absolute"
-                    style={{
-                      left: `${Math.random() * 300 - 150}px`,
-                      top: `${Math.random() * -100}px`,
-                      backgroundColor: ['#FFC107', '#2196F3', '#4CAF50', '#E91E63', '#FF9800'][Math.floor(Math.random() * 5)],
-                      width: `${5 + Math.random() * 10}px`,
-                      height: `${5 + Math.random() * 10}px`,
-                      borderRadius: Math.random() > 0.5 ? '50%' : '0',
-                      animation: `confetti ${1 + Math.random() * 2}s forwards cubic-bezier(0.1, 0.8, 0.3, 1)`,
-                      animationDelay: `${Math.random() * 0.5}s`
-                    }}
-                  />
-                ))}
+                <span className="bg-green-500/20 text-green-400 p-1 rounded">
+                  <Check className="w-4 h-4" />
+                </span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-500">
+                  Amazing! You got it right!
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="bg-red-500/20 text-red-400 p-1 rounded">
+                  <X className="w-4 h-4" />
+                </span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-500">
+                  Not quite right this time
+                </span>
               </>
             )}
-          </div>
-        ) : (
-          <div className="w-20 h-20 bg-gradient-to-br from-red-400 to-red-600 rounded-full 
-            flex items-center justify-center shadow-lg shadow-red-400/30 animate-scale-in">
-            <X className="w-10 h-10 text-white" />
-          </div>
-        )}
-      </div>
-      
-      <div className={`bg-gradient-to-br from-secondary/90 via-secondary/80 to-secondary/90 
-        backdrop-blur-lg rounded-xl p-6 border border-primary/10 shadow-lg
-        transition-all duration-700 ${fadeIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        
-        <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-          {isCorrect ? (
-            <>
-              <span className="bg-green-100 text-green-700 p-1 rounded">
-                <Check className="w-5 h-5" />
-              </span>
-              <span>Amazing! You got it right!</span>
-            </>
-          ) : (
-            <>
-              <span className="bg-red-100 text-red-700 p-1 rounded">
-                <X className="w-5 h-5" />
-              </span>
-              <span>Not quite right this time</span>
-            </>
-          )}
-        </h3>
-        
-        <p className="mb-5 leading-relaxed">
-          {isCorrect 
-            ? `Excellent job! You've correctly identified ${currentDestination.city}, ${currentDestination.country}.` 
-            : `The correct answer was ${currentDestination.city}, ${currentDestination.country}.`}
-        </p>
-        
-        <div className="bg-white/80 dark:bg-black/20 rounded-lg p-5 mb-5 backdrop-blur-sm border border-primary/5 shadow-inner">
-          <div className="flex items-center gap-2 mb-2">
-            <Globe className="w-5 h-5 text-primary" />
-            <h4 className="font-semibold">Fun Fact:</h4>
-          </div>
-          <p className="italic leading-relaxed">{fact}</p>
-        </div>
-        
-        {currentDestination.image && (
-          <div className="mb-5 overflow-hidden rounded-lg border border-primary/10 shadow-lg">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-              <img 
-                src={currentDestination.image} 
-                alt={currentDestination.city} 
-                className="w-full h-60 object-cover transition-transform duration-3000 hover:scale-110"
-                loading="lazy"
-              />
-              <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
-                {currentDestination.city}, {currentDestination.country}
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <div className="text-center mt-6">
-          <Button 
-            onClick={nextDestination} 
-            className="px-6 py-6 h-auto text-lg font-medium bg-gradient-to-r from-primary to-primary/90 
-              hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+          </motion.h3>
+
+          <motion.p
+            className="mb-3 text-sm leading-relaxed text-gray-300"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
           >
-            Next Destination
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-          </Button>
-        </div>
-      </div>
+            {isCorrect
+              ? `Excellent job! You've correctly identified ${currentDestination.city}, ${currentDestination.country}.`
+              : `The correct answer was ${currentDestination.city}, ${currentDestination.country}.`}
+          </motion.p>
+
+          <motion.div
+            className="flex flex-col md:flex-row gap-3 mb-3"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.5 }}
+          >
+            <div className="flex-1 bg-purple-500/10 rounded-lg p-3 backdrop-blur-sm border border-purple-500/10 shadow-inner">
+              <div className="flex items-center gap-2 mb-1">
+                <Globe className="w-4 h-4 text-purple-400" />
+                <h4 className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+                  Fun Fact:
+                </h4>
+              </div>
+              <p className="italic text-sm leading-relaxed text-gray-300">
+                {fact}
+              </p>
+            </div>
+
+            {currentDestination.image && (
+              <div className="flex-1 overflow-hidden rounded-lg border border-purple-500/10 shadow-md">
+                <div className="relative h-full">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <img
+                    src={currentDestination.image}
+                    alt={currentDestination.city}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    style={{ maxHeight: "140px" }}
+                  />
+                  <div className="absolute bottom-2 left-2 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+                    {currentDestination.city}, {currentDestination.country}
+                  </div>
+                </div>
+              </div>
+            )}
+          </motion.div>
+
+          <motion.div
+            className="text-center mt-3"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.6 }}
+          >
+            <Button
+              onClick={nextDestination}
+              className="px-4 py-2 h-auto text-base font-medium bg-gradient-to-r from-purple-500 to-pink-500 
+                hover:from-purple-600 hover:to-pink-600 hover:shadow-md transition-all duration-200 group"
+            >
+              Next Destination
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+            </Button>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

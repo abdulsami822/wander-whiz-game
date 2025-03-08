@@ -1,7 +1,12 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { GameState, GameAction, GameContextType, Destination } from '@/types/game';
-import { destinations, generateOptions } from '@/data/destinations';
-import { toast } from '@/hooks/use-toast';
+import React, { createContext, useContext, useReducer, ReactNode } from "react";
+import {
+  GameState,
+  GameAction,
+  GameContextType,
+  Destination,
+} from "@/types/game";
+import { destinations, generateOptions } from "@/data/destinations";
+import { toast } from "@/hooks/use-toast";
 
 const initialState: GameState = {
   currentDestination: null,
@@ -12,21 +17,22 @@ const initialState: GameState = {
   hasGuessed: false,
   isCorrect: null,
   options: [],
-  remainingDestinations: destinations.map(dest => dest.id),
-  gameOver: false
+  remainingDestinations: destinations.map((dest) => dest.id),
+  visitedDestinations: [],
+  gameOver: false,
 };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
-    case 'SET_LOADING':
+    case "SET_LOADING":
       return { ...state, loading: action.payload };
-    case 'SET_ERROR':
+    case "SET_ERROR":
       return { ...state, error: action.payload };
-    case 'SET_DESTINATION': {
+    case "SET_DESTINATION": {
       const destination = action.payload;
       const correctAnswer = `${destination.city}, ${destination.country}`;
       const options = generateOptions(correctAnswer);
-      
+
       return {
         ...state,
         currentDestination: destination,
@@ -35,54 +41,69 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         clueIndex: 0,
         hasGuessed: false,
         isCorrect: null,
-        options
+        options,
       };
     }
-    case 'SHOW_NEXT_CLUE':
+    case "SHOW_NEXT_CLUE":
       if (state.clueIndex < (state.currentDestination?.clues.length || 1) - 1) {
         return { ...state, clueIndex: state.clueIndex + 1 };
       }
       return state;
-    case 'MAKE_GUESS': {
+    case "MAKE_GUESS": {
       if (!state.currentDestination) return state;
-      
+
       const correctAnswer = `${state.currentDestination.city}, ${state.currentDestination.country}`;
       const isCorrect = action.payload === correctAnswer;
-      
+
       return {
         ...state,
         hasGuessed: true,
         isCorrect,
-        score: isCorrect ? state.score + (2 - state.clueIndex) : state.score
+        score: isCorrect ? state.score + (2 - state.clueIndex) : state.score,
       };
     }
-    case 'NEXT_DESTINATION': {
+    case "NEXT_DESTINATION": {
       if (!state.currentDestination) return state;
-      
+
       const currentDestId = state.currentDestination.id;
-      const newRemaining = state.remainingDestinations.filter(id => id !== currentDestId);
-      
+      const newRemaining = state.remainingDestinations.filter(
+        (id) => id !== currentDestId
+      );
+
+      // Add the current destination to visited destinations
+      const newVisitedDestinations = [
+        ...state.visitedDestinations,
+        currentDestId,
+      ];
+
       // If no more destinations, game is over
       if (newRemaining.length === 0) {
-        return { ...state, gameOver: true };
+        return {
+          ...state,
+          gameOver: true,
+          visitedDestinations: newVisitedDestinations,
+        };
       }
-      
+
       // Otherwise, pick a random new destination
       const randomIndex = Math.floor(Math.random() * newRemaining.length);
       const nextDestId = newRemaining[randomIndex];
-      const nextDestination = destinations.find(dest => dest.id === nextDestId);
-      
+      const nextDestination = destinations.find(
+        (dest) => dest.id === nextDestId
+      );
+
       if (!nextDestination) {
         return {
           ...state,
           error: "Couldn't find next destination",
-          gameOver: true
+          gameOver: true,
+          visitedDestinations: newVisitedDestinations,
         };
       }
-      
+
       const correctAnswer = `${nextDestination.city}, ${nextDestination.country}`;
       const options = generateOptions(correctAnswer);
-      
+
       return {
         ...state,
         currentDestination: nextDestination,
@@ -90,13 +111,14 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         hasGuessed: false,
         isCorrect: null,
         options,
-        remainingDestinations: newRemaining
+        remainingDestinations: newRemaining,
+        visitedDestinations: newVisitedDestinations,
       };
     }
-    case 'RESET_GAME':
+    case "RESET_GAME":
       return {
         ...initialState,
-        remainingDestinations: destinations.map(dest => dest.id)
+        remainingDestinations: destinations.map((dest) => dest.id),
       };
     default:
       return state;
@@ -107,11 +129,11 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export function GameProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
-  
+
   // Helper functions that will be provided in the context
   const makeGuess = (guess: string) => {
-    dispatch({ type: 'MAKE_GUESS', payload: guess });
-    
+    dispatch({ type: "MAKE_GUESS", payload: guess });
+
     if (state.currentDestination) {
       const correctAnswer = `${state.currentDestination.city}, ${state.currentDestination.country}`;
       if (guess === correctAnswer) {
@@ -129,32 +151,32 @@ export function GameProvider({ children }: { children: ReactNode }) {
       }
     }
   };
-  
+
   const nextDestination = () => {
-    dispatch({ type: 'NEXT_DESTINATION' });
+    dispatch({ type: "NEXT_DESTINATION" });
   };
-  
+
   const resetGame = () => {
-    dispatch({ type: 'RESET_GAME' });
-    
+    dispatch({ type: "RESET_GAME" });
+
     // Get a random destination to start
     const randomIndex = Math.floor(Math.random() * destinations.length);
     const firstDestination = destinations[randomIndex];
-    
-    dispatch({ type: 'SET_DESTINATION', payload: firstDestination });
+
+    dispatch({ type: "SET_DESTINATION", payload: firstDestination });
   };
-  
+
   const showNextClue = () => {
-    dispatch({ type: 'SHOW_NEXT_CLUE' });
+    dispatch({ type: "SHOW_NEXT_CLUE" });
   };
-  
+
   // Start the game with a random destination if there's none
   React.useEffect(() => {
     if (!state.currentDestination && !state.gameOver) {
       resetGame();
     }
   }, [state.currentDestination, state.gameOver]);
-  
+
   return (
     <GameContext.Provider
       value={{
@@ -163,7 +185,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         makeGuess,
         nextDestination,
         resetGame,
-        showNextClue
+        showNextClue,
       }}
     >
       {children}
@@ -174,7 +196,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 export function useGameContext() {
   const context = useContext(GameContext);
   if (context === undefined) {
-    throw new Error('useGameContext must be used within a GameProvider');
+    throw new Error("useGameContext must be used within a GameProvider");
   }
   return context;
 }

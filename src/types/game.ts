@@ -1,4 +1,3 @@
-
 export interface Destination {
   id: string;
   city: string;
@@ -19,17 +18,18 @@ export interface GameState {
   isCorrect: boolean | null;
   options: string[];
   remainingDestinations: string[];
+  visitedDestinations: string[];
   gameOver: boolean;
 }
 
 export type GameAction =
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null }
-  | { type: 'SET_DESTINATION'; payload: Destination }
-  | { type: 'SHOW_NEXT_CLUE' }
-  | { type: 'MAKE_GUESS'; payload: string }
-  | { type: 'NEXT_DESTINATION' }
-  | { type: 'RESET_GAME' };
+  | { type: "SET_LOADING"; payload: boolean }
+  | { type: "SET_ERROR"; payload: string | null }
+  | { type: "SET_DESTINATION"; payload: Destination }
+  | { type: "SHOW_NEXT_CLUE" }
+  | { type: "MAKE_GUESS"; payload: string }
+  | { type: "NEXT_DESTINATION" }
+  | { type: "RESET_GAME" };
 
 export interface GameContextType {
   state: GameState;
