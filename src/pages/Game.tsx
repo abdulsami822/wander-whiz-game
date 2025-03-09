@@ -87,7 +87,7 @@ const Game = () => {
 
         <div className="p-6 bg-gradient-to-br from-purple-900/40 to-indigo-900/40 rounded-lg text-white text-center my-4 border border-purple-500/30">
           <Trophy className="w-12 h-12 mx-auto text-yellow-400 mb-2" />
-          <h3 className="text-xl font-bold mb-2">WanderWhiz Challenge</h3>
+          <h3 className="text-xl font-bold mb-2">Globetrotter Challenge</h3>
           <p className="text-lg mb-2">{challengeUsername} scored</p>
           <div className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
             {challengeScore}

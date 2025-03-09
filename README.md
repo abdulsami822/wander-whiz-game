@@ -1,69 +1,175 @@
-# Welcome to your Lovable project
+# 🌍 Globetrotter ✨
 
-## Project info
+Globetrotter is an interactive geography guessing game where players test their knowledge of world destinations through engaging clues and challenges.
 
-**URL**: https://lovable.dev/projects/50dec1e2-a826-4aa3-836c-7d1f653486a8
+## 🎮 Features
 
-## How can I edit this code?
+- **Geography Guessing Game**: Test your knowledge of cities and countries around the world.
+- **Progressive Clues**: Reveal additional hints if you're stuck, but use fewer clues for higher scores.
+- **Multiple Difficulty Levels**: Choose from Easy, Medium, or Hard challenges.
+- **Challenge Friends**: Generate shareable challenge cards to compete with friends.
+- **User Profiles**: Track your high scores and game statistics.
+- **Responsive Design**: Play seamlessly on desktop or mobile devices.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🚀 Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/50dec1e2-a826-4aa3-836c-7d1f653486a8) and start prompting.
+- **Frontend**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **Backend/Database**: Supabase
+- **Authentication**: Supabase Auth
+- **State Management**: React Context API
+- **Animation**: Framer Motion
+- **Special Effects**: Canvas Confetti
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🛠️ Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Ensure you have the following installed:
 
-Follow these steps:
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- npm or bun package manager
+- Git
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Installation
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. **Clone the repository**
 
-# Step 3: Install the necessary dependencies.
-npm i
+   ```bash
+   git clone https://github.com/yourusername/wander-whiz-trae.git
+   cd wander-whiz-trae
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+2. **Install dependencies**
 
-**Edit a file directly in GitHub**
+   ```bash
+   npm install
+   # or if using bun
+   bun install
+   ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. **Set up environment variables**  
+   Create a `.env` file in the root directory and add:
 
-**Use GitHub Codespaces**
+   ```plaintext
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+   The application will be available at **[http://localhost:8080](http://localhost:8080)**.
 
-## What technologies are used for this project?
+---
 
-This project is built with .
+## 📖 Documentation
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+For detailed documentation, check out the `docs` folder:
 
-## How can I deploy this project?
+### Setup Guide
 
-Simply open [Lovable](https://lovable.dev/projects/50dec1e2-a826-4aa3-836c-7d1f653486a8) and click on Share -> Publish.
+To set up the project from scratch:
 
-## I want to use a custom domain - is that possible?
+1. Clone the repository
+2. Install dependencies
+3. Configure environment variables
+4. Start the development server
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Refer to the **Getting Started** section above for detailed steps.
+
+### Architecture Overview
+
+The project follows a modular architecture:
+
+- **Frontend** (React + Vite) for UI interactions
+- **Backend** (Supabase) for authentication and database
+- **State Management** via React Context API
+- **Game Logic** is structured using React hooks
+
+### Features Documentation
+
+- **Single Player Mode**: Players guess locations based on clues.
+- **Challenge Mode**: Players can challenge friends and share scores.
+- **User Profiles**: Tracks user scores and statistics.
+- **Game Scoring**: Scores are calculated based on correct guesses and hints used.
+
+### Multiplayer Features
+
+- **Username Registration**: Players register before inviting friends.
+- **Challenge Link**: Players can share an invite link with a dynamic image.
+- **Score Display**: Invited friends can see the sender’s score before playing.
+
+### API Documentation
+
+- **User Registration API**: Handles storing player profiles in Supabase.
+- **Challenge API**: Generates and stores challenge links.
+- **Leaderboard API**: Fetches top players' scores.
+
+### Deployment Guide
+
+1. Deploy the frontend using **Vercel, Netlify, or Cloudflare Pages**.
+2. Configure Supabase database and authentication.
+3. Ensure `.env` variables are set in production.
+4. Use a CDN for static assets like challenge images.
+
+### Troubleshooting
+
+#### Issue: Environment variables not loading
+
+**Solution**: Ensure `.env` file is present in the root and restart the server.
+
+#### Issue: Supabase authentication failing
+
+**Solution**: Check Supabase API keys and permissions.
+
+---
+
+## 🎯 Game Rules
+
+1. You'll be presented with clues about a mystery destination.
+2. Choose the correct city from multiple options.
+3. Reveal additional clues if needed (but each clue reduces potential points).
+4. Earn points for correct guesses.
+5. Complete multiple rounds to get your final score.
+6. Challenge friends to beat your score!
+
+---
+
+## 🌟 Screenshots
+
+(Include relevant screenshots here)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a new feature branch (`git checkout -b feature-branch`)
+3. Commit changes (`git commit -m "Add new feature"`)
+4. Push to the branch (`git push origin feature-branch`)
+5. Open a Pull Request
+
+For details, check the [Contributing Guidelines](./docs/contributing.md).
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 👏 Acknowledgments
+
+- Geography data sourced from various public APIs.
+- Icons provided by **Lucide React**.
+- UI components from **shadcn/ui**.

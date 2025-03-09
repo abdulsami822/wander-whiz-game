@@ -60,7 +60,7 @@ export const GameSessionManager: React.FC = () => {
   };
 
   const shareViaWhatsApp = () => {
-    const url = `https://wa.me/?text=Join%20my%20WanderWhiz%20game!%20${encodeURIComponent(
+    const url = `https://wa.me/?text=Join%20my%20Globetrotter %20game!%20${encodeURIComponent(
       `${window.location.origin}/join/${createdSessionId}`
     )}`;
     window.open(url, "_blank");
