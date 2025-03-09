@@ -214,24 +214,26 @@ const Game = () => {
               )}
 
               {/* Buttons in a better layout */}
-              <div className="flex gap-3 pt-3">
+              <div className="flex flex-col sm:flex-row gap-3 pt-3">
                 <Button
                   onClick={handleResetGame}
-                  className="flex-1 group px-3 py-2 h-auto text-sm font-medium bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                  className="w-full sm:flex-1 group px-3 py-2 h-auto text-sm font-medium bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                 >
                   <RefreshCw className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform" />
                   New Journey
                 </Button>
 
-                <Button
-                  onClick={openChallengeDialog}
-                  className="flex-1 group px-3 py-2 h-auto text-sm font-medium bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Challenge
-                </Button>
+                {score > 0 && (
+                  <Button
+                    onClick={openChallengeDialog}
+                    className="w-full sm:flex-1 group px-3 py-2 h-auto text-sm font-medium bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                  >
+                    <Users className="w-4 h-4 mr-2" />
+                    Challenge
+                  </Button>
+                )}
 
-                <Link to="/" className="flex-1">
+                <Link to="/" className="w-full sm:flex-1">
                   <Button
                     variant="outline"
                     className="w-full px-3 py-2 h-auto text-sm font-medium border border-purple-500/50 hover:bg-purple-500/10"
@@ -275,10 +277,79 @@ const Game = () => {
       </div>
     );
   }
-
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] relative">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] relative overflow-hidden">
+      {/* Fun animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Animated grid background */}
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+
+        {/* Floating map pins */}
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={`pin-${i}`}
+            className="absolute animate-float"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 10}s`,
+              animationDuration: `${15 + Math.random() * 20}s`,
+              opacity: 0.2,
+              transform: `scale(${0.5 + Math.random() * 0.5})`,
+            }}
+          >
+            <MapPin className="w-8 h-8 text-purple-400" />
+          </div>
+        ))}
+
+        {/* Glowing orbs */}
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div
+            key={`orb-${i}`}
+            className="absolute rounded-full animate-pulse-slow"
+            style={{
+              width: `${Math.random() * 150 + 50}px`,
+              height: `${Math.random() * 150 + 50}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              background: `radial-gradient(circle, rgba(${
+                Math.floor(Math.random() * 100) + 100
+              }, ${Math.floor(Math.random() * 50) + 50}, ${
+                Math.floor(Math.random() * 200) + 55
+              }, 0.15), transparent)`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${5 + Math.random() * 7}s`,
+            }}
+          ></div>
+        ))}
+
+        {/* Compass elements */}
+        <div className="absolute top-[10%] right-[5%] opacity-10 rotate-12 animate-spin-slow">
+          <Compass className="w-32 h-32 text-indigo-300" />
+        </div>
+        <div className="absolute bottom-[15%] left-[8%] opacity-10 -rotate-12 animate-spin-slow-reverse">
+          <Compass className="w-24 h-24 text-purple-300" />
+        </div>
+
+        {/* Subtle particle effect */}
+        <div className="absolute inset-0">
+          {Array.from({ length: 30 }).map((_, i) => (
+            <div
+              key={`particle-${i}`}
+              className="absolute rounded-full bg-white animate-float-particle"
+              style={{
+                width: `${Math.random() * 3 + 1}px`,
+                height: `${Math.random() * 3 + 1}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                opacity: Math.random() * 0.3 + 0.1,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${10 + Math.random() * 20}s`,
+              }}
+            ></div>
+          ))}
+        </div>
+      </div>
 
       {/* Challenge welcome modal */}
       <ChallengeWelcomeModal />
@@ -290,7 +361,7 @@ const Game = () => {
 
         {/* Enhanced challenge info banner */}
         {challengeUsername && challengeScore && (
-          <div className="mt-4 p-4 bg-gradient-to-r from-purple-900/30 to-indigo-900/30 border border-purple-500/30 rounded-lg flex items-center justify-between">
+          <div className="mt-4 p-4 bg-gradient-to-r from-purple-900/30 to-indigo-900/30 border border-purple-500/30 rounded-lg flex items-center justify-between backdrop-blur-sm">
             <div className="flex items-center gap-3">
               <Trophy className="h-8 w-8 text-yellow-400" />
               <div>
@@ -321,7 +392,7 @@ const Game = () => {
           transition={{ duration: 0.3 }}
           className="w-full max-w-2xl mb-4 flex items-center justify-between"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 backdrop-blur-sm">
             <Compass className="w-4 h-4 text-purple-400" />
             <span className="text-sm text-purple-400">
               Destination Challenge
@@ -331,7 +402,7 @@ const Game = () => {
           {/* Challenge a Friend button in the game UI */}
         </motion.div>
 
-        <GameCard className="w-full max-w-2xl border-2 border-purple-500/20 bg-[#1a1b26]/80 backdrop-blur-sm overflow-visible min-h-[380px] flex flex-col">
+        <GameCard className="w-full max-w-2xl border-2 border-purple-500/20 bg-[#1a1b26]/80 backdrop-blur-sm overflow-visible min-h-[380px] flex flex-col shadow-[0_0_15px_rgba(149,76,233,0.15)]">
           <div className="absolute top-4 right-4 z-10">
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20">
               <MapPin className="w-3 h-3 text-purple-400" />

@@ -79,7 +79,7 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="flex justify-center md:justify-end animate-fade-in animate-delay-100">
+            <div className="mt-16 sm:mt-0 flex justify-center md:justify-end animate-fade-in animate-delay-100">
               <div className="w-full max-w-md relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
                 <div className="relative animate-float">

@@ -1,5 +1,5 @@
 import React from "react";
-import { useGameContext } from "@/contexts/GameContext";
+import { MAX_ROUNDS, useGameContext } from "@/contexts/GameContext";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, MapPin, Star, Plane } from "lucide-react";
 
@@ -8,7 +8,7 @@ const ScoreDisplay: React.FC = () => {
   const { score, round } = state;
 
   // Calculate progress based on current round
-  const totalRounds = 10; // Match the maxRounds in GameContext
+  const totalRounds = MAX_ROUNDS; // Match the maxRounds in GameContext
   const progressPercentage = (round / totalRounds) * 100;
   const progress = Math.max(5, Math.min(100, progressPercentage));
 
@@ -55,8 +55,8 @@ const ScoreDisplay: React.FC = () => {
           className="absolute top-0 bottom-0 left-0 flex items-center transition-all duration-500"
           style={{ left: `${progress}%`, transform: "translateX(-50%)" }}
         >
-          <div className="w-8 h-8 flex items-center justify-center animate-float">
-            <Plane className="w-5 h-5 text-white fill-purple-500 transform -rotate-45" />
+          <div className="w-8 h-8 flex items-center justify-center">
+            <Plane className="w-5 h-5 text-white fill-purple-500 transform rotate-45" />
           </div>
         </div>
 

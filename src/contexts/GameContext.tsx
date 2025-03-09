@@ -79,6 +79,9 @@ const initialState: GameState = {
   challengeUsername: null,
   challengeScore: null,
 };
+
+export const MAX_ROUNDS = 3;
+
 // Reducer
 // In the gameReducer function, we need to handle the SET_USERNAME and SET_CHALLENGE_INFO actions
 function gameReducer(state: GameState, action: GameAction): GameState {
@@ -132,7 +135,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case "NEXT_DESTINATION": {
       const newRound = state.round + 1;
-      const maxRounds = 10; // Configurable game length
+      const maxRounds = MAX_ROUNDS; // Configurable game length
       const gameOver = newRound >= maxRounds;
 
       // If the game is over and we have a username, update the high score

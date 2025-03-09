@@ -7,11 +7,14 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Share, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { UsernameRegistration } from "@/components/UsernameRegistration";
 import { useGameContext } from "@/contexts/GameContext";
 import html2canvas from "html2canvas";
 import confetti from "canvas-confetti";
+
+// Remove Supabase import
+// import { supabase } from "@/lib/supabase";
 
 interface ChallengeDialogProps {
   open: boolean;
@@ -22,6 +25,7 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
   const { state, setUsername, generateChallengeUrl } = useGameContext();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const [usernameJustSet, setUsernameJustSet] = useState(false);
 
@@ -51,6 +55,7 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
     setUsername(username);
     setUsernameJustSet(true);
   };
+
   // Handle the case when username is just set
   useEffect(() => {
     if (usernameJustSet && state.username && !imageUrl && !isGenerating) {
@@ -61,6 +66,7 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
       return () => clearTimeout(timer);
     }
   }, [usernameJustSet, state.username, imageUrl, isGenerating]);
+
   const generateImage = async () => {
     if (!previewRef.current) return;
     try {
@@ -85,15 +91,116 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
       setIsGenerating(false);
     }
   };
-  const shareToWhatsApp = () => {
-    const challengeUrl = generateChallengeUrl();
-    const text = `I scored ${state.score} points in WanderWhiz! Can you beat me? Play here: ${challengeUrl}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(whatsappUrl, "_blank");
-  };
 
+  // Upload image to Imgur
+  const uploadImageToImgur = async (dataUrl: string): Promise<string> => {
+    try {
+      // Convert data URL to blob
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+
+      // Create FormData
+      const formData = new FormData();
+      formData.append("image", blob);
+
+      // Upload to Imgur API
+      const imgurResponse = await fetch("https://api.imgur.com/3/image", {
+        method: "POST",
+        headers: {
+          Authorization: "Client-ID ecb71088d0c1854", // Replace with your Imgur Client ID
+        },
+        body: formData,
+      });
+
+      if (!imgurResponse.ok) {
+        throw new Error("Failed to upload image to Imgur");
+      }
+
+      const imgurData = await imgurResponse.json();
+
+      // Return the URL of the uploaded image
+      return imgurData.data.link;
+    } catch (error) {
+      console.error("Error uploading image to Imgur:", error);
+      // Return the data URL as fallback if upload fails
+      return dataUrl;
+    }
+  };
+  // Updated WhatsApp sharing function to share image directly when possible
+  const shareToWhatsApp = async () => {
+    if (!imageUrl) return;
+
+    try {
+      setIsSharing(true);
+
+      // Generate challenge URL
+      const challengeUrl = generateChallengeUrl();
+
+      // Create message text
+      const text = `I scored ${state.score} points in WanderWhiz! Can you beat me? Play here: ${challengeUrl}`;
+
+      // For mobile devices, we can use the Web Share API with file sharing if available
+      if (navigator.share) {
+        try {
+          // Convert data URL to blob
+          const response = await fetch(imageUrl);
+          const blob = await response.blob();
+
+          // Create a File object from the blob
+          const file = new File(
+            [blob],
+            `wanderwhiz-challenge-${state.username}.png`,
+            {
+              type: "image/png",
+            }
+          );
+
+          // Try to share with both text and file
+          await navigator.share({
+            title: "WanderWhiz Challenge",
+            text: text,
+            url: challengeUrl,
+            files: [file],
+          });
+          return;
+        } catch (error) {
+          console.error("Error sharing via Web Share API with files:", error);
+
+          // If sharing with files fails, try without files (fallback)
+          try {
+            await navigator.share({
+              title: "WanderWhiz Challenge",
+              text: text,
+              url: challengeUrl,
+            });
+            return;
+          } catch (fallbackError) {
+            console.error(
+              "Error sharing via Web Share API fallback:",
+              fallbackError
+            );
+            // Continue to WhatsApp fallback
+          }
+        }
+      }
+
+      // If Web Share API is not available or fails, fall back to Imgur upload
+      const publicImageUrl = await uploadImageToImgur(imageUrl);
+
+      // Regular WhatsApp sharing with text and image URL
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+        text + "\n\nSee my challenge card: " + publicImageUrl
+      )}`;
+      window.open(whatsappUrl, "_blank");
+    } catch (error) {
+      console.error("Error in shareToWhatsApp:", error);
+      alert("There was an error sharing your challenge. Please try again.");
+    } finally {
+      setIsSharing(false);
+    }
+  };
   console.log(state.username, "userr");
-  // Fix the conditional rendering in the return statement
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -126,22 +233,19 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
             )}
             {imageUrl && (
               <div className="space-y-4">
-                <div className="flex gap-2">
-                  <Button onClick={shareToWhatsApp} className="flex-1 gap-2">
-                    <MessageSquare className="h-4 w-4" />
-                    Share on WhatsApp
-                  </Button>
+                <div className="flex gap-2 flex-col">
                   <Button
-                    variant="outline"
-                    onClick={() => {
-                      navigator.clipboard.writeText(generateChallengeUrl());
-                      alert("Link copied to clipboard!");
-                    }}
-                    className="gap-2"
+                    onClick={shareToWhatsApp}
+                    className="gap-2 bg-green-600 hover:bg-green-700"
+                    disabled={isSharing}
                   >
-                    <Share className="h-4 w-4" />
-                    Copy Link
+                    <MessageSquare className="h-4 w-4" />
+                    {isSharing ? "Preparing Share..." : "Share on WhatsApp"}
                   </Button>
+                  <p className="text-xs text-center text-muted-foreground mt-2">
+                    Your challenge card will be uploaded and shared
+                    automatically
+                  </p>
                 </div>
               </div>
             )}
