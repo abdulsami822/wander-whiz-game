@@ -41,8 +41,8 @@ Ensure you have the following installed:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/wander-whiz-trae.git
-   cd wander-whiz-trae
+   git clone https://github.com/abdulsami822/wander-whiz-game.git
+   cd wander-whiz-game
    ```
 
 2. **Install dependencies**
@@ -68,10 +68,6 @@ Ensure you have the following installed:
    The application will be available at **[http://localhost:8080](http://localhost:8080)**.
 
 ---
-
-## 📖 Documentation
-
-For detailed documentation, check out the `docs` folder:
 
 ### Setup Guide
 
@@ -142,12 +138,6 @@ The project follows a modular architecture:
 
 ---
 
-## 🌟 Screenshots
-
-(Include relevant screenshots here)
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
@@ -157,8 +147,6 @@ Contributions are welcome! Please follow these steps:
 3. Commit changes (`git commit -m "Add new feature"`)
 4. Push to the branch (`git push origin feature-branch`)
 5. Open a Pull Request
-
-For details, check the [Contributing Guidelines](./docs/contributing.md).
 
 ---
 
