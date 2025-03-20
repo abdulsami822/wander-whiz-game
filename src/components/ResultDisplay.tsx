@@ -153,13 +153,8 @@ const ResultDisplay: React.FC = () => {
               <div className="flex-1 overflow-hidden rounded-lg border border-purple-500/10 shadow-md">
                 <div className="relative h-full">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <img
-                    src={currentDestination.image}
-                    alt={currentDestination.city}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    style={{ maxHeight: "140px" }}
-                  />
+                  <DestinationImage currentDestination={currentDestination} />
+
                   <div className="absolute bottom-2 left-2 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
                     {currentDestination.city}, {currentDestination.country}
                   </div>
@@ -185,6 +180,31 @@ const ResultDisplay: React.FC = () => {
           </motion.div>
         </motion.div>
       </AnimatePresence>
+    </div>
+  );
+};
+
+const DestinationImage = ({ currentDestination }) => {
+  // Add image fallback and loading states
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  return (
+    <div className="relative">
+      {currentDestination.image && !imageError ? (
+        <img
+          src={currentDestination.image}
+          alt={currentDestination.city}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          className={`w-full h-28 object-cover rounded-lg transition-opacity duration-300 ${
+            imageLoaded ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ) : (
+        <div className="w-full h-28 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg flex items-center justify-center">
+          <Globe className="w-12 h-12 text-purple-400/50" />
+        </div>
+      )}
     </div>
   );
 };

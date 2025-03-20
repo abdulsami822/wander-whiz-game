@@ -17,9 +17,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center p-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] z-0">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] z-0" />
 
         <div className="container max-w-6xl mx-auto z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-12">

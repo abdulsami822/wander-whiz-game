@@ -6,7 +6,6 @@ import Home from "@/pages/Index";
 import Game from "@/pages/Game";
 import NotFound from "@/pages/NotFound";
 import About from "@/pages/About"; // Add About page import
-import AuthForm from "@/components/Auth/AuthForm";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
