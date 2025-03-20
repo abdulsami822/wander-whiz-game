@@ -16,16 +16,16 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "game-core": ["@/contexts/GameContext", "@/lib/supabase"],
-          "ui-components": [
-            "@/components/ui/button",
-            "@/components/ui/dialog",
-            "@/components/ui/progress",
-            "@/components/ui/select",
-            "@/components/ui/toast",
-          ],
+        manualChunks: (id) => {
+          // All node_modules in one vendor chunk
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+
+          // All app code in one chunk
+          if (id.includes("/src/")) {
+            return "app";
+          }
         },
       },
     },
