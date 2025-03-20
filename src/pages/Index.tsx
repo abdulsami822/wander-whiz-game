@@ -34,7 +34,7 @@ const Index = () => {
                     Globetrotter
                   </span>
                 </h1>
-                <p className="text-xl md:text-2xl text-gray-400 animate-fade-in">
+                <p className="text-xl md:text-2xl text-gray-400">
                   Embark on an exciting journey around the world. Test your
                   knowledge, discover new places, and become a master traveler!
                 </p>
