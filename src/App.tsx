@@ -22,7 +22,9 @@ const PageLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen relative">
       <Navbar />
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow">
+        <Suspense fallback={<PageLoader />}>{children}</Suspense>
+      </main>
       <Footer />
     </div>
   );
