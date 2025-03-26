@@ -24,6 +24,7 @@
     --input: 225 14% 19%;
     --ring: 267 91% 58%;
     --radius: 0.75rem;
+    --footer-height: 80px; /* Adjust this value based on your footer's actual height */
   }
 }
 

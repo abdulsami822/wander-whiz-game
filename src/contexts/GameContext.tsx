@@ -201,7 +201,9 @@ const GameContext = createContext<
       createGameSession: () => Promise<string>;
       joinGameSession: (sessionId: string) => Promise<void>;
       setDifficulty: (difficulty: Difficulty[]) => void;
-      // New challenge-related functions
+      // Add this function to the type
+      fetchDestinations: (force?: boolean) => Promise<void>;
+      // Challenge-related functions
       setUsername: (username: string) => Promise<void>;
       generateChallengeUrl: () => string;
       openChallengeDialog: () => void;
@@ -240,12 +242,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [state.destinations]);
 
   // Fetch destinations from Supabase
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchDestinations() {
-      // Skip if we already have destinations for the current difficulty
-      if (state.destinations.length > 0) {
+  const fetchDestinations = useCallback(
+    async (force = false) => {
+      // Skip if we already have destinations for the current difficulty and not forcing
+      if (state.destinations.length > 0 && !force) {
         return;
       }
 
@@ -253,14 +253,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         dispatch({ type: "SET_LOADING", payload: true });
 
         // Filter by selected difficulty levels
-        const { data, error } = await supabase
-          .from("destinations")
-          .select("*")
-          .in("difficulty", state.difficulty);
+        const { data, error } = await supabase.rpc("get_random_destinations", {
+          limit_count: MAX_ROUNDS + 5,
+        });
 
         if (error) throw error;
 
-        if (data && isMounted) {
+        if (data) {
           // Transform data to match our frontend structure if needed
           const destinations = data.map((item) => ({
             id: item.id,
@@ -276,26 +275,21 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
           dispatch({ type: "SET_DESTINATIONS", payload: destinations });
         }
 
-        if (isMounted) {
-          dispatch({ type: "SET_LOADING", payload: false });
-        }
+        dispatch({ type: "SET_LOADING", payload: false });
       } catch (error) {
         console.error("Error fetching destinations:", error);
-        if (isMounted) {
-          dispatch({
-            type: "SET_ERROR",
-            payload: "Failed to load destinations",
-          });
-          dispatch({ type: "SET_LOADING", payload: false });
-        }
+        dispatch({
+          type: "SET_ERROR",
+          payload: "Failed to load destinations",
+        });
+        dispatch({ type: "SET_LOADING", payload: false });
       }
-    }
-    fetchDestinations();
+    },
+    [state.difficulty, state.destinations.length]
+  );
 
-    return () => {
-      isMounted = false;
-    };
-  }, [state.difficulty, state.destinations.length]);
+  // Don't automatically fetch on mount
+  // Instead, expose the fetch function through context
   // Set up a new destination when needed
   useEffect(() => {
     if (
@@ -338,7 +332,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "SET_DESTINATIONS", payload: [] });
     dispatch({ type: "SET_DIFFICULTY", payload: difficulty });
   };
-  // Multiplayer functions
+
+  // Multiplayer functions, not used anywhere now
   const createGameSession = async (): Promise<string> => {
     try {
       const { data: sessionData } = await supabase.auth.getSession();
@@ -388,6 +383,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       throw error;
     }
   };
+
   const joinGameSession = async (sessionId: string): Promise<void> => {
     try {
       const { data: sessionData } = await supabase.auth.getSession();
@@ -524,6 +520,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         createGameSession,
         joinGameSession,
         setDifficulty,
+        // Add this function to the context
+        fetchDestinations,
         // Challenge-related functions
         setUsername,
         generateChallengeUrl,

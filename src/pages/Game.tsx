@@ -28,7 +28,8 @@ import {
 } from "@/components/ui/dialog";
 
 const Game = () => {
-  const { state, resetGame, openChallengeDialog } = useGameContext();
+  const { state, resetGame, openChallengeDialog, fetchDestinations } =
+    useGameContext();
   const {
     currentDestination,
     hasGuessed,
@@ -40,6 +41,11 @@ const Game = () => {
 
   // State for the welcome challenge modal
   const [showChallengeModal, setShowChallengeModal] = useState(false);
+
+  // Fetch destinations when the Game component mounts
+  useEffect(() => {
+    fetchDestinations();
+  }, [fetchDestinations]);
 
   useEffect(() => {
     // Show challenge modal when challenge parameters are present and game is starting
