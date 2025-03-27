@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import GameCard from "@/components/GameCard";
 import ClueDisplay from "@/components/ClueDisplay";
@@ -26,10 +26,18 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import clsx from "clsx";
 
 const Game = () => {
-  const { state, resetGame, openChallengeDialog, fetchDestinations } =
-    useGameContext();
+  const {
+    state,
+    setupNewDestination,
+    resetGame,
+    openChallengeDialog,
+    fetchDestinations,
+    makeGuess,
+  } = useGameContext();
   const {
     currentDestination,
     hasGuessed,
@@ -78,6 +86,12 @@ const Game = () => {
     // Clear URL parameters by replacing the current URL with the base path
     window.history.replaceState({}, document.title, window.location.pathname);
   };
+
+  const { timer, timeup, resetTimer } = useTimer({
+    destination: currentDestination?.id,
+    hasGuessed,
+  });
+
   // Challenge welcome modal
   const ChallengeWelcomeModal = () => (
     <Dialog open={showChallengeModal} onOpenChange={setShowChallengeModal}>
@@ -128,6 +142,12 @@ const Game = () => {
   if (!currentDestination) {
     return <GameLoader />;
   }
+
+  const handleTimeUpNext = () => {
+    setupNewDestination();
+    resetTimer();
+    makeGuess({ timer: 0 });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] relative overflow-hidden">
@@ -205,6 +225,7 @@ const Game = () => {
 
       {/* Challenge welcome modal */}
       <ChallengeWelcomeModal />
+      <TimerUpDialog open={timeup} onClose={handleTimeUpNext} />
 
       <header className="relative z-10 container max-w-4xl mx-auto pt-6 px-6">
         <div className="bg-purple-500/10 rounded-xl border border-purple-500/20 overflow-hidden">
@@ -255,11 +276,18 @@ const Game = () => {
         </motion.div>
 
         <GameCard className="w-full max-w-2xl border-2 border-purple-500/20 bg-[#1a1b26]/80 backdrop-blur-sm overflow-visible min-h-[380px] flex flex-col shadow-[0_0_15px_rgba(149,76,233,0.15)]">
-          <div className="absolute top-4 right-4 z-10">
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20">
-              <MapPin className="w-3 h-3 text-purple-400" />
-              <span className="text-xs text-purple-400">Mystery Location</span>
-            </div>
+          <div className="z-10">
+            <Progress
+              value={(timer / 15) * 100}
+              indicatorClassName={
+                timer > 10
+                  ? "bg-green-500"
+                  : timer > 5
+                  ? "bg-orange-500"
+                  : "bg-red-500"
+              }
+              className="h-4"
+            />
           </div>
 
           <div className="flex-grow flex flex-col justify-center">
@@ -268,7 +296,7 @@ const Game = () => {
             ) : (
               <div className="space-y-6 p-6">
                 <ClueDisplay />
-                <AnswerOptions />
+                <AnswerOptions timer={timer} />
               </div>
             )}
           </div>
@@ -284,6 +312,71 @@ const Game = () => {
         </motion.div>
       </main>
     </div>
+  );
+};
+
+const useTimer = ({ destination = null, hasGuessed = false }) => {
+  const initialTime = 15;
+  const [timer, setTimer] = useState(initialTime);
+  const timerRef = useRef();
+  const resetTimer = () => {
+    setTimer(initialTime);
+  };
+  useEffect(() => {
+    if (hasGuessed) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      return;
+    }
+
+    resetTimer();
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    timerRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev > 0) {
+          return prev - 1;
+        }
+        return Math.max(prev, 0);
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(timerRef.current);
+    };
+  }, [destination, hasGuessed]);
+
+  return { timer, timeup: timer <= 0, resetTimer };
+};
+
+const TimerUpDialog = ({ open, onClose }) => {
+  const handleNext = () => {
+    resetTimer();
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] border-2 border-purple-500/30">
+        <DialogHeader>
+          <DialogTitle className="text-2xl text-center">Time Up!!</DialogTitle>
+          <DialogDescription className="text-center text-gray-300">
+            Better luck next time.
+          </DialogDescription>
+        </DialogHeader>
+
+        <DialogFooter>
+          <Button
+            onClick={onClose}
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+          >
+            Next
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
@@ -469,3 +562,7 @@ const GameLoader = () => {
 };
 
 export default Game;
+
+// we need a timer for 0-15 and score accordingly - setInterval on game context
+//only give 15 seconds to guess the destination
+// we need apply some visual elemens for timer

@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
 import {
   supabase,
@@ -13,9 +14,14 @@ import {
   updateUserScore,
 } from "@/lib/supabase";
 import { ChallengeDialog } from "@/components/ChallengeDialog"; // Add this import
+import { destinations } from "@/data/destinations";
 
 // Types
 type Difficulty = "easy" | "medium" | "hard";
+
+const MAX_TIME = 15;
+
+//@ts-ignore
 
 interface GameState {
   destinations: Destination[];
@@ -35,6 +41,7 @@ interface GameState {
   username: string | null;
   challengeUsername: string | null;
   challengeScore: number | null;
+  timer: number;
 }
 
 // Actions
@@ -43,11 +50,20 @@ type GameAction =
   | { type: "SET_CURRENT_DESTINATION"; payload: Destination }
   | { type: "SET_OPTIONS"; payload: { city: string; country: string }[] }
   | { type: "SHOW_NEXT_CLUE" }
-  | { type: "MAKE_GUESS"; payload: { city: string; country: string } }
+  | {
+      type: "MAKE_GUESS";
+      payload: { city: string; country: string; timer: number };
+    }
   | { type: "NEXT_DESTINATION" }
   | {
       type: "RESET_GAME";
       payload?: { difficulty?: Difficulty[]; clearChallenge?: boolean };
+    }
+  | {
+      type: "TIMER_TICK";
+    }
+  | {
+      type: "TIMER_RESET";
     }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
@@ -78,6 +94,7 @@ const initialState: GameState = {
   username: null,
   challengeUsername: null,
   challengeScore: null,
+  timer: MAX_TIME,
 };
 
 export const MAX_ROUNDS = 10;
@@ -106,31 +123,32 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ),
       };
     case "MAKE_GUESS": {
+      if (action.payload.timer <= 0) {
+        return {
+          ...state,
+          hasGuessed: false,
+          isCorrect: false,
+          score: state.score + 0,
+        };
+      }
+      console.log(action.payload.timer, "timerrr");
       const isCorrect =
         state.currentDestination?.city === action.payload.city &&
         state.currentDestination?.country === action.payload.country;
 
-      // Calculate score based on number of clues used and correctness
-      const clueScore = state.currentDestination?.clues.length
-        ? Math.max(1, state.currentDestination.clues.length - state.clueIndex)
-        : 1;
-
-      const difficultyMultiplier =
-        state.currentDestination?.difficulty === "easy"
-          ? 1
-          : state.currentDestination?.difficulty === "medium"
-          ? 2
-          : 3;
-
-      const pointsEarned = isCorrect
-        ? clueScore * difficultyMultiplier * 10
+      const timerScore = isCorrect
+        ? action.payload.timer > 10
+          ? 10
+          : action.payload.timer > 5
+          ? 5
+          : 0
         : 0;
 
       return {
         ...state,
         hasGuessed: true,
         isCorrect,
-        score: state.score + pointsEarned,
+        score: state.score + timerScore,
       };
     }
     case "NEXT_DESTINATION": {
@@ -164,6 +182,19 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           ? null
           : state.challengeScore,
       };
+
+    case "TIMER_TICK": {
+      return {
+        ...state,
+        timer: state.timer - 1,
+      };
+    }
+    case "TIMER_RESET": {
+      return {
+        ...state,
+        timer: 15,
+      };
+    }
 
     case "SET_LOADING":
       return { ...state, loading: action.payload };
@@ -217,6 +248,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
   const [isChallengeDialogOpen, setIsChallengeDialogOpen] = useState(false);
+  const timerRef = useRef<number | null>();
 
   // Helper function to set up a new destination - memoized with useCallback
   const setupNewDestination = useCallback(() => {
@@ -306,12 +338,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     state.gameOver,
     state.loading,
   ]);
+
   // Actions
   const showNextClue = () => {
     dispatch({ type: "SHOW_NEXT_CLUE" });
   };
 
-  const makeGuess = (option: { city: string; country: string }) => {
+  const makeGuess = (option: {
+    city: string;
+    country: string;
+    timer: number;
+  }) => {
     dispatch({ type: "MAKE_GUESS", payload: option });
   };
 
@@ -533,6 +570,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         setUsername,
         generateChallengeUrl,
         openChallengeDialog,
+        setupNewDestination,
       }}
     >
       {children}

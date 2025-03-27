@@ -3,7 +3,7 @@ import { useGameContext } from "@/contexts/GameContext";
 import { Button } from "@/components/ui/button";
 import { Check, X, Globe } from "lucide-react";
 
-const AnswerOptions: React.FC = () => {
+const AnswerOptions: React.FC = ({ timer }) => {
   const { state, makeGuess } = useGameContext();
   const { options, hasGuessed, currentDestination } = state;
 
@@ -20,7 +20,7 @@ const AnswerOptions: React.FC = () => {
               overflow-hidden border-2
               
             `}
-            onClick={() => !hasGuessed && makeGuess(option)}
+            onClick={() => !hasGuessed && makeGuess({ ...option, timer })}
             disabled={hasGuessed}
           >
             {/* Background pattern */}
