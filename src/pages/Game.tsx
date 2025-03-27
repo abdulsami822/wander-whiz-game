@@ -71,9 +71,9 @@ const Game = () => {
     state.destinations.length,
   ]);
   // Create a handler function that calls resetGame without passing the event
-  const handleResetGame = () => {
+  const handleResetGame = async () => {
     // Reset the game and clear any challenge data
-    resetGame({ clearChallenge: true });
+    await resetGame({ clearChallenge: true });
 
     // Clear URL parameters by replacing the current URL with the base path
     window.history.replaceState({}, document.title, window.location.pathname);

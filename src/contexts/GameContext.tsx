@@ -320,11 +320,18 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     setupNewDestination();
   };
 
-  const resetGame = (options?: {
+  const resetGame = async (options?: {
     difficulty?: Difficulty[];
     clearChallenge?: boolean;
   }) => {
+    // First reset the game state
     dispatch({ type: "RESET_GAME", payload: options });
+
+    // Then fetch new destinations
+    await fetchDestinations(true); // Pass true to force a new fetch
+
+    // Set up new destination after fetching
+    setupNewDestination();
   };
 
   const setDifficulty = (difficulty: Difficulty[]) => {

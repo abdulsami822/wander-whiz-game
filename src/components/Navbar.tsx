@@ -9,8 +9,8 @@ const Navbar = () => {
   const isGamePage = location.pathname === "/game";
 
   // Create a handler function that calls resetGame without passing the event
-  const handleResetGame = () => {
-    resetGame();
+  const handleResetGame = async () => {
+    await resetGame();
   };
 
   const navigationLinks = [
