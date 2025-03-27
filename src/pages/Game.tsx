@@ -115,174 +115,20 @@ const Game = () => {
 
   if (gameOver) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] relative">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -inset-[10px] opacity-30">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full bg-purple-500/20"
-                style={{
-                  width: `${Math.random() * 150 + 50}px`,
-                  height: `${Math.random() * 150 + 50}px`,
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                }}
-              ></div>
-            ))}
-          </div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-lg">
-          <GameCard
-            title="Journey Complete!"
-            className="mx-auto animate-scale-in border border-purple-500/20 bg-[#1a1b26]/90 backdrop-blur-sm"
-          >
-            <div className="text-center p-6 space-y-5">
-              {/* Award badge */}
-              <div className="relative">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-md">
-                  <Award className="w-10 h-10 text-white" />
-                </div>
-              </div>
-
-              {/* Score display */}
-              <div>
-                <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 mb-2">
-                  Score: {score}
-                </h2>
-                <p className="text-sm text-gray-300">Journey completed!</p>
-              </div>
-
-              {/* Stats cards in horizontal layout */}
-              <div className="flex gap-4 justify-center">
-                <div className="flex-1 bg-gradient-to-br from-purple-500/10 to-purple-500/5 p-3 rounded-lg border border-purple-500/20">
-                  <div className="text-purple-400 text-2xl font-bold">10</div>
-                  <div className="text-gray-400 text-sm">Destinations</div>
-                </div>
-                <div className="flex-1 bg-gradient-to-br from-pink-500/10 to-pink-500/5 p-3 rounded-lg border border-pink-500/20">
-                  <div className="text-pink-400 text-2xl font-bold">Expert</div>
-                  <div className="text-gray-400 text-sm">Traveler Rank</div>
-                </div>
-              </div>
-
-              {/* Challenge info display - improved */}
-              {challengeUsername && challengeScore && (
-                <div className="bg-gradient-to-r from-purple-900/20 to-indigo-900/20 p-4 rounded-lg border border-purple-500/30">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center">
-                      <Trophy className="w-5 h-5 text-yellow-400 mr-2" />
-                      <h3 className="text-base font-bold text-purple-400">
-                        Challenge Results
-                      </h3>
-                    </div>
-
-                    {score > challengeScore ? (
-                      <span className="text-sm font-bold text-green-400 px-3 py-1 bg-green-500/20 rounded-full border border-green-500/30">
-                        Victory! 🏆
-                      </span>
-                    ) : score === challengeScore ? (
-                      <span className="text-sm font-bold text-yellow-400 px-3 py-1 bg-yellow-500/20 rounded-full border border-yellow-500/30">
-                        Tie 🤝
-                      </span>
-                    ) : (
-                      <span className="text-sm font-bold text-red-400 px-3 py-1 bg-red-500/20 rounded-full border border-red-500/30">
-                        Try Again 💪
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm border-t border-purple-500/20 pt-3 mt-2">
-                    <div>
-                      <span className="text-gray-400">Challenger:</span>
-                      <div className="font-bold text-purple-400">
-                        {challengeUsername}
-                      </div>
-                      <div className="text-pink-400 font-bold">
-                        {challengeScore} pts
-                      </div>
-                    </div>
-
-                    <div className="text-center text-gray-400 text-xl font-bold">
-                      vs
-                    </div>
-
-                    <div className="text-right">
-                      <span className="text-gray-400">You:</span>
-                      <div className="font-bold text-purple-400">
-                        Your Score
-                      </div>
-                      <div className="text-pink-400 font-bold">{score} pts</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Buttons in a better layout */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-3">
-                <Button
-                  onClick={handleResetGame}
-                  className="w-full sm:flex-1 group px-3 py-2 h-auto text-sm font-medium bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-                >
-                  <RefreshCw className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform" />
-                  New Journey
-                </Button>
-
-                {score > 0 && (
-                  <Button
-                    onClick={openChallengeDialog}
-                    className="w-full sm:flex-1 group px-3 py-2 h-auto text-sm font-medium bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
-                  >
-                    <Users className="w-4 h-4 mr-2" />
-                    Challenge
-                  </Button>
-                )}
-
-                <Link to="/" className="w-full sm:flex-1">
-                  <Button
-                    variant="outline"
-                    className="w-full px-3 py-2 h-auto text-sm font-medium border border-purple-500/50 hover:bg-purple-500/10"
-                    onClick={handleResetGame}
-                  >
-                    <Home className="w-4 h-4 mr-2" />
-                    Home
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </GameCard>
-        </div>
-      </div>
+      <GameOver
+        score={score}
+        challengeScore={challengeScore}
+        challengeUsername={challengeUsername}
+        handleResetGame={handleResetGame}
+        openChallengeDialog={openChallengeDialog}
+      />
     );
   }
 
   if (!currentDestination) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#2a2b36] to-[#1a1b26]">
-        <div className="text-center space-y-4">
-          <Globe className="w-16 h-16 mx-auto text-purple-400 animate-pulse" />
-          <p className="text-xl text-gray-400">
-            Preparing your next destination...
-          </p>
-          <div className="flex justify-center space-x-2 mt-4">
-            <div
-              className="w-3 h-3 rounded-full bg-purple-500 animate-bounce"
-              style={{ animationDelay: "0ms" }}
-            ></div>
-            <div
-              className="w-3 h-3 rounded-full bg-pink-500 animate-bounce"
-              style={{ animationDelay: "150ms" }}
-            ></div>
-            <div
-              className="w-3 h-3 rounded-full bg-red-500 animate-bounce"
-              style={{ animationDelay: "300ms" }}
-            ></div>
-          </div>
-        </div>
-      </div>
-    );
+    return <GameLoader />;
   }
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] relative overflow-hidden">
       {/* Fun animated background elements */}
@@ -437,6 +283,187 @@ const Game = () => {
           <p>Use the clues to identify the mystery destination</p>
         </motion.div>
       </main>
+    </div>
+  );
+};
+
+const GameOver: React.FC<{
+  score: number;
+  challengeUsername?: string;
+  challengeScore?: number;
+  handleResetGame: () => void;
+  openChallengeDialog: () => void;
+}> = ({
+  score,
+  challengeScore,
+  challengeUsername,
+  handleResetGame,
+  openChallengeDialog,
+}) => {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gradient-to-b from-[#2a2b36] to-[#1a1b26] relative">
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -inset-[10px] opacity-30">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full bg-purple-500/20"
+              style={{
+                width: `${Math.random() * 150 + 50}px`,
+                height: `${Math.random() * 150 + 50}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+            ></div>
+          ))}
+        </div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-lg">
+        <GameCard
+          title="Journey Complete!"
+          className="mx-auto animate-scale-in border border-purple-500/20 bg-[#1a1b26]/90 backdrop-blur-sm"
+        >
+          <div className="text-center p-6 space-y-5">
+            {/* Award badge */}
+            <div className="relative">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-md">
+                <Award className="w-10 h-10 text-white" />
+              </div>
+            </div>
+
+            {/* Score display */}
+            <div>
+              <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 mb-2">
+                Score: {score}
+              </h2>
+              <p className="text-sm text-gray-300">Journey completed!</p>
+            </div>
+
+            {/* Stats cards in horizontal layout */}
+            <div className="flex gap-4 justify-center">
+              <div className="flex-1 bg-gradient-to-br from-purple-500/10 to-purple-500/5 p-3 rounded-lg border border-purple-500/20">
+                <div className="text-purple-400 text-2xl font-bold">10</div>
+                <div className="text-gray-400 text-sm">Destinations</div>
+              </div>
+              <div className="flex-1 bg-gradient-to-br from-pink-500/10 to-pink-500/5 p-3 rounded-lg border border-pink-500/20">
+                <div className="text-pink-400 text-2xl font-bold">Expert</div>
+                <div className="text-gray-400 text-sm">Traveler Rank</div>
+              </div>
+            </div>
+
+            {/* Challenge info display - improved */}
+            {challengeUsername && challengeScore && (
+              <div className="bg-gradient-to-r from-purple-900/20 to-indigo-900/20 p-4 rounded-lg border border-purple-500/30">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center">
+                    <Trophy className="w-5 h-5 text-yellow-400 mr-2" />
+                    <h3 className="text-base font-bold text-purple-400">
+                      Challenge Results
+                    </h3>
+                  </div>
+
+                  {score > challengeScore ? (
+                    <span className="text-sm font-bold text-green-400 px-3 py-1 bg-green-500/20 rounded-full border border-green-500/30">
+                      Victory! 🏆
+                    </span>
+                  ) : score === challengeScore ? (
+                    <span className="text-sm font-bold text-yellow-400 px-3 py-1 bg-yellow-500/20 rounded-full border border-yellow-500/30">
+                      Tie 🤝
+                    </span>
+                  ) : (
+                    <span className="text-sm font-bold text-red-400 px-3 py-1 bg-red-500/20 rounded-full border border-red-500/30">
+                      Try Again 💪
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between text-sm border-t border-purple-500/20 pt-3 mt-2">
+                  <div>
+                    <span className="text-gray-400">Challenger:</span>
+                    <div className="font-bold text-purple-400">
+                      {challengeUsername}
+                    </div>
+                    <div className="text-pink-400 font-bold">
+                      {challengeScore} pts
+                    </div>
+                  </div>
+
+                  <div className="text-center text-gray-400 text-xl font-bold">
+                    vs
+                  </div>
+
+                  <div className="text-right">
+                    <span className="text-gray-400">You:</span>
+                    <div className="font-bold text-purple-400">Your Score</div>
+                    <div className="text-pink-400 font-bold">{score} pts</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Buttons in a better layout */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-3">
+              <Button
+                onClick={handleResetGame}
+                className="w-full sm:flex-1 group px-3 py-2 h-auto text-sm font-medium bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              >
+                <RefreshCw className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform" />
+                New Journey
+              </Button>
+
+              {score > 0 && (
+                <Button
+                  onClick={openChallengeDialog}
+                  className="w-full sm:flex-1 group px-3 py-2 h-auto text-sm font-medium bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Challenge
+                </Button>
+              )}
+
+              <Link to="/" className="w-full sm:flex-1">
+                <Button
+                  variant="outline"
+                  className="w-full px-3 py-2 h-auto text-sm font-medium border border-purple-500/50 hover:bg-purple-500/10"
+                  onClick={handleResetGame}
+                >
+                  <Home className="w-4 h-4 mr-2" />
+                  Home
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </GameCard>
+      </div>
+    </div>
+  );
+};
+
+const GameLoader = () => {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#2a2b36] to-[#1a1b26]">
+      <div className="text-center space-y-4">
+        <Globe className="w-16 h-16 mx-auto text-purple-400 animate-pulse" />
+        <p className="text-xl text-gray-400">
+          Preparing your next destination...
+        </p>
+        <div className="flex justify-center space-x-2 mt-4">
+          <div
+            className="w-3 h-3 rounded-full bg-purple-500 animate-bounce"
+            style={{ animationDelay: "0ms" }}
+          ></div>
+          <div
+            className="w-3 h-3 rounded-full bg-pink-500 animate-bounce"
+            style={{ animationDelay: "150ms" }}
+          ></div>
+          <div
+            className="w-3 h-3 rounded-full bg-red-500 animate-bounce"
+            style={{ animationDelay: "300ms" }}
+          ></div>
+        </div>
+      </div>
     </div>
   );
 };
