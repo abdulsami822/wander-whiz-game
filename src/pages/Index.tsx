@@ -31,7 +31,7 @@ const Index = () => {
                 </div>
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight animate-fade-in animate-delay-100 mb-6">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
-                    Globetrotter
+                    WanderWhiz
                   </span>
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-400">
@@ -156,7 +156,7 @@ const Index = () => {
         <div className="container max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold animate-fade-in text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mb-4">
-              Why Play Globetrotter?
+              Why Play WanderWhiz?
             </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               Experience the world's most fascinating destinations from your
@@ -224,8 +224,7 @@ const Index = () => {
               Our Growing Community
             </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Join thousands of travelers exploring the world through
-              Globetrotter
+              Join thousands of travelers exploring the world through WanderWhiz
             </p>
           </div>
 
@@ -294,7 +293,7 @@ const Index = () => {
             {[
               {
                 quote:
-                  "Globetrotter has completely transformed how I learn about new places. It's both fun and educational!",
+                  "WanderWhiz has completely transformed how I learn about new places. It's both fun and educational!",
                 author: "Sarah K.",
                 location: "United States",
                 gradient: "from-purple-500 to-purple-600",

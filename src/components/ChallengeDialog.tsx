@@ -137,7 +137,7 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
       const challengeUrl = generateChallengeUrl();
 
       // Create message text
-      const text = `I scored ${state.score} points in Globetrotter ! Can you beat me? Play here: ${challengeUrl}`;
+      const text = `I scored ${state.score} points in WanderWhiz ! Can you beat me? Play here: ${challengeUrl}`;
 
       // For mobile devices, we can use the Web Share API with file sharing if available
       if (navigator.share) {
@@ -149,7 +149,7 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
           // Create a File object from the blob
           const file = new File(
             [blob],
-            `globetrotter -challenge-${state.username}.png`,
+            `wanderwhiz -challenge-${state.username}.png`,
             {
               type: "image/png",
             }
@@ -157,7 +157,7 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
 
           // Try to share with both text and file
           await navigator.share({
-            title: "Globetrotter  Challenge",
+            title: "WanderWhiz  Challenge",
             text: text,
             url: challengeUrl,
             files: [file],
@@ -169,7 +169,7 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
           // If sharing with files fails, try without files (fallback)
           try {
             await navigator.share({
-              title: "Globetrotter  Challenge",
+              title: "WanderWhiz  Challenge",
               text: text,
               url: challengeUrl,
             });
@@ -219,7 +219,7 @@ export function ChallengeDialog({ open, onOpenChange }: ChallengeDialogProps) {
               ref={previewRef}
               className="p-6 bg-gradient-to-br from-purple-900 to-indigo-900 rounded-lg text-white text-center"
             >
-              <h3 className="text-xl font-bold mb-2">Globetrotter Challenge</h3>
+              <h3 className="text-xl font-bold mb-2">WanderWhiz Challenge</h3>
               <p className="text-lg mb-4">{state.username} scored</p>
               <div className="text-5xl font-bold mb-4">{state.score}</div>
               <p className="text-sm">Can you beat this score?</p>

@@ -452,7 +452,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       // No need to call getOrCreateUserProfile again since the user is already created
       // in the UsernameRegistration component
       dispatch({ type: "SET_USERNAME", payload: username });
-      localStorage.setItem("globetrotter _username", username);
+      localStorage.setItem("wanderwhiz_username", username);
 
       // Update the user's score if needed (only if we have a score to update)
       if (state.score > 0) {
@@ -509,7 +509,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Load username from localStorage on initial load
   useEffect(() => {
-    const storedUsername = localStorage.getItem("globetrotter _username");
+    const storedUsername = localStorage.getItem("wanderwhiz _username");
     if (storedUsername) {
       dispatch({ type: "SET_USERNAME", payload: storedUsername });
     }

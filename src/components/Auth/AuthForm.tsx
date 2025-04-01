@@ -93,7 +93,7 @@ export const AuthForm: React.FC = () => {
     <Card className="w-full max-w-md mx-auto bg-[#1a1b26]/80 backdrop-blur-sm border-2 border-purple-500/20">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
-          Welcome to Globetrotter
+          Welcome to WanderWhiz
         </CardTitle>
         <CardDescription className="text-center text-gray-400">
           Sign in or create an account to start your journey

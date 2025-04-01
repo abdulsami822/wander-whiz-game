@@ -41,7 +41,7 @@ const Navbar = () => {
           to="/"
           className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 hover:opacity-80 transition-all duration-300"
         >
-          Globetrotter
+          WanderWhiz
         </Link>
         <div className="flex gap-2">
           {isGamePage ? (

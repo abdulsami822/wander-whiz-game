@@ -27,7 +27,7 @@ const About = () => {
               <Globe className="w-16 h-16 mx-auto mb-6 text-purple-400" />
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
-              About Globetrotter
+              About WanderWhiz
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 mb-8 animate-fade-in animate-delay-100 max-w-2xl mx-auto">
               Embark on a virtual journey around the world, testing your
@@ -131,7 +131,7 @@ const About = () => {
                       icon: <Globe className="w-6 h-6" />,
                     },
                     {
-                      text: "Compete for high scores and become a master globetrotter!",
+                      text: "Compete for high scores and become a master wanderwhiz!",
                       icon: <Trophy className="w-6 h-6" />,
                     },
                   ].map((step, index) => (

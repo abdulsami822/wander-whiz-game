@@ -85,7 +85,7 @@ export function UsernameRegistration({
       if (userError) throw userError;
 
       // Store in local storage
-      localStorage.setItem("globetrotter _username", values.username);
+      localStorage.setItem("wanderwhiz _username", values.username);
 
       toast({
         title: "Registration successful!",
