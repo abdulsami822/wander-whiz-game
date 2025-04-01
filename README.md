@@ -1,6 +1,6 @@
-# 🌍 Globetrotter ✨
+# 🌍 WanderWhiz ✨
 
-Globetrotter is an interactive geography guessing game where players test their knowledge of world destinations through engaging clues and challenges.
+WanderWhiz is an interactive geography guessing game where players test their knowledge of world destinations through engaging clues and challenges.
 
 ## 🎮 Features
 
